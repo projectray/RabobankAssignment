@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: poa-service
+
+  data:
+    mongodb:
+      database: test
+      uri: mongodb://localhost/test
+  mongodb:
+    embedded:
+      version: 4.0.2
+
+jwt:
+  secret: "dGVzdC10ZXN0LXNlY3JldC10ZXN0LXNlY3JldC10ZXN0LXNlY3JldC0xMjM0NTY="

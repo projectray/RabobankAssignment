@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: poa-service
+
+  data:
+    mongodb:
+      uri: ${MONGO_URI:mongodb://localhost:27017}
+      database: ${MONGO_DB:rabobank}
+
+server:
+  port: 8080
+
+jwt:
+  secret: ${JWT_SECRET:KzP7Q9vX8hF1ZyzU+Xo0QjVfYp3Yn1VJZPsm6xT6Hk0=}
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
