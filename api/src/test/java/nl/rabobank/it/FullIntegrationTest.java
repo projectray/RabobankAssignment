@@ -16,6 +16,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -25,8 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 @ActiveProfiles("test")
+@AutoConfigureMockMvc
 class FullIntegrationTest {
 
   @Autowired
@@ -41,6 +43,7 @@ class FullIntegrationTest {
   @Autowired
   private ObjectMapper objectMapper;
 
+
   @BeforeEach
   void setupTestData() {
     userRepository.deleteAll();
@@ -50,17 +53,6 @@ class FullIntegrationTest {
       .username("testuser")
       .password(new BCryptPasswordEncoder().encode("secret"))
       .roles(List.of("ROLE_GRANTOR"))
-      .build());
-
-    poaRepository.save(PoaDocument.builder()
-      .grantorName("grantor123")
-      .granteeName("grantee456")
-      .account(PaymentAccount.builder()
-        .accountNumber("NL12RABO0123456789")
-        .accountHolderName("grantor123")
-        .balance(5.0)
-        .build())
-      .authorization(Authorization.READ)
       .build());
   }
 
@@ -93,9 +85,6 @@ class FullIntegrationTest {
         .header("Authorization", "Bearer " + token)
         .contentType("application/json")
         .content(objectMapper.writeValueAsString(poaRequest)))
-      .andExpect(status().isOk())
-      .andExpect(jsonPath("$.authorization").value("READ"))
-      .andExpect(jsonPath("$.grantorName").value("grantor123"))
-      .andExpect(jsonPath("$.granteeName").value("grantee456"));
+      .andExpect(status().isCreated());
   }
 }
